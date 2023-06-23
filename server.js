@@ -3,7 +3,10 @@ const app = express();
 const { chats } = require("./chat");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const routes = require("./routes/routes");
+
 dotenv.config();
+app.use(express.json());
 
 //creating an express api
 app.get("/", (req, res) => {
@@ -16,6 +19,8 @@ app.get("/chats/:id", (req, res) => {
   const singleChat = chats.find((chatData) => chatData._id === req.params.id);
   res.send(singleChat);
 });
+
+app.use("/addUser", routes);
 
 //created a node server, which is running on port :5000 or 2019
 const PORT = process.env.PORT || 2023;
