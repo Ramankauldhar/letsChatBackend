@@ -9,8 +9,9 @@ const signupUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("All fields are required");
   }
-  const userAlreadySignedUp = await User.findone({ email });
+  const userAlreadySignedUp = await User.findOne({ email });
 
+  //checking if the user already exist
   if (userAlreadySignedUp) {
     res.status(400);
     throw new Error("User Allready Signed Up");
@@ -24,11 +25,7 @@ const signupUser = asyncHandler(async (req, res) => {
   });
   if (newUser) {
     res.status(201).json({
-      _id: newUser._id,
-      name: newUser.name,
-      email: newUser.email,
-      profilePic: newUser.profilePic,
-      token: generateToken(newUser._id),
+      message: "Sign Up Successfully",
     });
   } else {
     res.status(400);
@@ -36,4 +33,18 @@ const signupUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { signupUser };
+const authenticateUser = asyncHandler(async (req, res) => {
+  const { email, pswd } = req.body;
+  const user = await User.findOne({ email });
+
+  if (user && (await user.matchPassword(pswd))) {
+    res.json({
+      message: "Sign In Successfully",
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid User and Password");
+  }
+});
+
+module.exports = { signupUser, authenticateUser };
