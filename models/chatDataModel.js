@@ -7,12 +7,12 @@ const chatDataModel = mongoose.Schema(
     },
     isGroupChat: {
       type: Boolean,
-      defaultLfalse,
+      default: false,
     },
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "UserModel",
+        ref: "User",
       },
     ],
     newMessage: {

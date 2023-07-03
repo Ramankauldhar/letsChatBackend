@@ -4,16 +4,20 @@ const { chats } = require("./chat");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const routes = require("./routes/routes");
+const chatRoutes = require("./routes/chatRoutes");
 
 dotenv.config();
 app.use(express.json());
 
-//creating an express api
+//creating an api to test if it is running or not
 app.get("/", (req, res) => {
   res.send("Chat API is running!");
 });
-
+//creating an api for users login and register
 app.use("/user", routes);
+
+//creating api for chat
+app.use("/chat", chatRoutes);
 
 //created a node server, which is running on port :5000 or 2019
 const PORT = process.env.PORT || 2023;

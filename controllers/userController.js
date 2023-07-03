@@ -40,6 +40,7 @@ const authenticateUser = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(pswd))) {
     res.json({
       message: "Sign In Successfully",
+      token: generateToken(user._id),
     });
   } else {
     res.status(401);
@@ -61,7 +62,7 @@ const allUsersData = asyncHandler(async (req, res) => {
       {};
 
   // searching other users , not the current user
-  const users = await User.find(keyword);
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
   res.send(users);
 });
 
