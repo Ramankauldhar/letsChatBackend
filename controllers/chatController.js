@@ -46,4 +46,26 @@ const accessChat = asyncHandler(async (req, res) => {
     }
   }
 });
-module.exports = { accessChat };
+
+//this is to find chatss of a particular user with other people
+const getChatData = asyncHandler(async (req, res) => {
+  try {
+    Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+      .populate("users", "-pswd")
+      .populate("groupAdmin", "-pswd")
+      .populate("newMessage")
+      .sort({ updatedAt: -1 })
+      .then(async (results) => {
+        results = await User.populate(results, {
+          path: "newMessage.sender",
+          select: "name profilePic email",
+        });
+        res.status(200).send(results);
+      });
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
+module.exports = { accessChat, getChatData };
